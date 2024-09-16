@@ -1,0 +1,27 @@
+services:
+  www:
+    image: php:apache
+    build:
+      context: /Users/imranmatloob/PhpstormProjects/docker
+      dockerfile: Dockerfile
+    volumes:
+      - "./path_on_host:/var/www/html" # sync project dir with container web dir
+    ports:
+      - 80:80
+      - 443:443 # for future ssl traffic
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=docker_php
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - "./database:/docker-entrypoint-initdb.d" # sync database dir with container db dir
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
